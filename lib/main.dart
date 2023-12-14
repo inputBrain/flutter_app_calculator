@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(const MyApp());
 
@@ -23,16 +24,9 @@ class CalculatorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? _currentValue = 0;
-
-    var calc = SimpleCalculator(
-      value: _currentValue,
-      hideExpression: false,
-      hideSurroundingBorder: true,
-      autofocus: true,
-      onChanged: (key, value, expression) {},
-      onTappedDisplay: (value, details) {},
-      theme: const CalculatorThemeData(
+    var calc = const SimpleCalculator(
+      value: 0,
+      theme: CalculatorThemeData(
         borderColor: Colors.black,
         borderWidth: 2,
         displayColor: Colors.black,
@@ -84,6 +78,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool adsOn = true;
 
   @override
+  void initState() {
+    super.initState();
+    _loadAdsSetting();
+  }
+
+  Future<void> _loadAdsSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      adsOn = prefs.getBool('adsOn') ?? true;
+    });
+  }
+
+  Future<void> _saveAdsSetting(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('adsOn', value);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -92,16 +104,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: <Widget>[
           SwitchListTile(
-            title: const Text('Adds'),
+            title: const Text('Ads'),
             subtitle: const Text('Turn this on or off to enable ads'),
             value: adsOn,
             activeColor: Colors.green,
             inactiveTrackColor: Colors.grey,
-            onChanged: (bool value) {
+            onChanged: (bool value) async {
               setState(() {
                 adsOn = value;
               });
-              // Here you might save the state to persistent storage
+              await _saveAdsSetting(value);
             },
           ),
         ],
