@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+
   runApp(const MyApp());
 }
 
@@ -32,19 +33,62 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
-  bool _isAdEnabled = true;
+  late BannerAd myBanner;
+  bool isAdLoaded = false;
+
+  InterstitialAd? myInterstitialAd;
+  bool isInterstitialAdLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    _loadAdSetting();
+
+    myBanner = BannerAd(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (_) {
+          setState(() {
+            isAdLoaded = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    );
+
+    myBanner.load();
+
+    // Инициализация и загрузка интерстициальной рекламы
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Замените на ваш Ad Unit ID
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          // Реклама загружена
+          myInterstitialAd = ad;
+          isInterstitialAdLoaded = true;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          // Обработка ошибки загрузки
+        },
+      ),
+    );
   }
 
-  Future<void> _loadAdSetting() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isAdEnabled = prefs.getBool('adsOn') ?? true;
-    });
+  void showInterstitialAd() {
+    if (isInterstitialAdLoaded && myInterstitialAd != null) {
+      myInterstitialAd!.show();
+    }
+  }
+
+  @override
+  void dispose() {
+    myBanner.dispose();
+    myInterstitialAd?.dispose();
+    super.dispose();
   }
 
   @override
@@ -70,113 +114,31 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator App'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () async {
-              await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const SettingsScreen(),
-              ));
-              _loadAdSetting(); // Reload ad setting after returning from settings
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
+          ElevatedButton(
+            onPressed: isInterstitialAdLoaded ? showInterstitialAd : null,
+            child: const Text('Показать рекламу'),
+          ),
+          if (isAdLoaded)
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+                child: AdWidget(ad: myBanner),
+              ),
+            ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: calc,
             ),
           ),
-          if (_isAdEnabled)
-            AdBannerWidget(
-              adUnitId: 'ca-app-pub-3940256099942544/6300978111',
-              isAdEnabled: _isAdEnabled,
-            ),
         ],
       ),
     );
-  }
-}
-
-class AdBannerWidget extends StatefulWidget {
-  final String adUnitId;
-  final bool isAdEnabled;
-
-  const AdBannerWidget({
-    Key? key,
-    required this.adUnitId,
-    required this.isAdEnabled,
-  }) : super(key: key);
-
-  @override
-  _AdBannerWidgetState createState() => _AdBannerWidgetState();
-}
-
-class _AdBannerWidgetState extends State<AdBannerWidget> {
-  BannerAd? _bannerAd;
-  bool _isAdLoaded = false;
-
-  void _createBannerAd() {
-    _bannerAd = BannerAd(
-      adUnitId: widget.adUnitId,
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (_) {
-          setState(() {
-            _isAdLoaded = true;
-          });
-        },
-        onAdFailedToLoad: (ad, error) {
-          // Handle the error
-          ad.dispose();
-        },
-      ),
-    );
-
-    _bannerAd?.load();
-  }
-
-  @override
-  void didUpdateWidget(covariant AdBannerWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.isAdEnabled != oldWidget.isAdEnabled) {
-      if (widget.isAdEnabled) {
-        _createBannerAd();
-      } else {
-        _bannerAd?.dispose();
-        _isAdLoaded = false;
-      }
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.isAdEnabled) {
-      _createBannerAd();
-    }
-  }
-
-  @override
-  void dispose() {
-    _bannerAd?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _isAdLoaded && widget.isAdEnabled
-        ? Container(
-      height: _bannerAd!.size.height.toDouble(),
-      width: _bannerAd!.size.width.toDouble(),
-      alignment: Alignment.center,
-      child: AdWidget(ad: _bannerAd!),
-    )
-        : const SizedBox();
   }
 }
 
@@ -217,7 +179,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: <Widget>[
           SwitchListTile(
-            title: const Text('Adds'),
+            title: const Text('Ads'),
             subtitle: const Text('Turn this on or off to enable ads'),
             value: adsOn,
             activeColor: Colors.green,
