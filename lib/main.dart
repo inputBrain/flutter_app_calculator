@@ -35,14 +35,26 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
   late BannerAd myBanner;
   bool isAdLoaded = false;
-
-  InterstitialAd? myInterstitialAd;
-  bool isInterstitialAdLoaded = false;
+  bool adsOn = true;
 
   @override
   void initState() {
     super.initState();
+    _loadAdsSetting(); 
+    _initBannerAd();
+  }
 
+  Future<void> _loadAdsSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      adsOn = prefs.getBool('adsOn') ?? true;
+      if (adsOn) {
+        _initBannerAd();
+      }
+    });
+  }
+
+  void _initBannerAd() {
     myBanner = BannerAd(
       adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       size: AdSize.banner,
@@ -60,34 +72,11 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     );
 
     myBanner.load();
-
-    // Инициализация и загрузка интерстициальной рекламы
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Замените на ваш Ad Unit ID
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          // Реклама загружена
-          myInterstitialAd = ad;
-          isInterstitialAdLoaded = true;
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          // Обработка ошибки загрузки
-        },
-      ),
-    );
-  }
-
-  void showInterstitialAd() {
-    if (isInterstitialAdLoaded && myInterstitialAd != null) {
-      myInterstitialAd!.show();
-    }
   }
 
   @override
   void dispose() {
     myBanner.dispose();
-    myInterstitialAd?.dispose();
     super.dispose();
   }
 
@@ -114,28 +103,35 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Calculator App'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () async {
+              await Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SettingsScreen(),
+              ));
+              _loadAdsSetting();
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
-          ElevatedButton(
-            onPressed: isInterstitialAdLoaded ? showInterstitialAd : null,
-            child: const Text('Показать рекламу'),
-          ),
-          if (isAdLoaded)
-            Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                width: myBanner.size.width.toDouble(),
-                height: myBanner.size.height.toDouble(),
-                child: AdWidget(ad: myBanner),
-              ),
-            ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: calc,
             ),
           ),
+          if (isAdLoaded && adsOn) 
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                width: myBanner.size.width.toDouble(),
+                height: myBanner.size.height.toDouble(),
+                child: AdWidget(ad: myBanner),
+              ),
+            ),
         ],
       ),
     );
