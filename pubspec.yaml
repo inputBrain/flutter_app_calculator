@@ -38,6 +38,7 @@ dependencies:
   flutter_simple_calculator: ^2.2.4
   shared_preferences: ^2.2.2
   google_mobile_ads: ^4.0.0
+  firebase_core: ^2.24.2
 
 dev_dependencies:
   flutter_test:
