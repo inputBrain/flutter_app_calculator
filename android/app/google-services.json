@@ -12,7 +12,12 @@
           "package_name": "com.axlink.calculatorapp"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "439626619019-3sg7ogbqmk70nqsj8fjin2fi7chirc0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA5Aqmj0uM2P2kFkWCY4efUtjB-VJ5xRcQ"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439626619019-3sg7ogbqmk70nqsj8fjin2fi7chirc0l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "439626619019-jhpd2fmttpnm3oeceekjndvfprq3fnvl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.calculatorApp"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +48,20 @@
           "package_name": "com.example.calculator_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "439626619019-5j2gi2fr6i86ob3q0e2j9e7vcn5r3jae.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.calculator_app",
+            "certificate_hash": "2a4aa11b0d6371f94a755adc61210a8a7549060f"
+          }
+        },
+        {
+          "client_id": "439626619019-3sg7ogbqmk70nqsj8fjin2fi7chirc0l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA5Aqmj0uM2P2kFkWCY4efUtjB-VJ5xRcQ"
@@ -39,7 +69,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "439626619019-3sg7ogbqmk70nqsj8fjin2fi7chirc0l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "439626619019-jhpd2fmttpnm3oeceekjndvfprq3fnvl.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.calculatorApp"
+              }
+            }
+          ]
         }
       }
     }
