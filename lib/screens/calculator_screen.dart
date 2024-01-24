@@ -1,3 +1,5 @@
+import 'package:calculator_app/models/UserModel.dart';
+import 'package:calculator_app/widgets/user_information_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,7 +28,9 @@ class MyApp extends StatelessWidget {
 }
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({Key? key}) : super(key: key);
+  final UserModel? user;
+
+  const CalculatorScreen({Key? key, this.user}) : super(key: key);
 
   @override
   _CalculatorScreenState createState() => _CalculatorScreenState();
@@ -117,6 +121,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       ),
       body: Column(
         children: [
+          UserInformationWidget(user: widget.user),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(18.0),
