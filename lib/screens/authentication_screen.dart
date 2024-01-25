@@ -10,7 +10,7 @@ class AuthenticationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
+        child: ElevatedButton.icon(
           onPressed: () async {
             UserCredential? userCredential = await FirebaseAuthService.signInWithGoogle();
 
@@ -23,7 +23,16 @@ class AuthenticationScreen extends StatelessWidget {
               ));
             }
           },
-          child: const Text('Sign in with Google'),
+          icon: Image.asset(
+            'images/google_icon.png',
+            width: 50,
+            height: 50,
+          ),
+          label: const Text('Sign in with Google'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.white,
+            foregroundColor: Colors.black,
+          ),
         ),
       ),
     );
