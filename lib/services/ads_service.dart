@@ -1,4 +1,5 @@
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AdsService {
   static late BannerAd _bannerAd;
@@ -34,4 +35,14 @@ class AdsService {
   }
  
   static BannerAd get myBanner => _bannerAd;
+
+  static void loadAdsSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    adsOn = prefs.getBool('adsOn') ?? true;
+  }
+
+  static Future<void> saveAdsSetting(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('adsOn', value);
+  }
 }
