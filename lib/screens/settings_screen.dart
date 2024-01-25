@@ -15,7 +15,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    AdsService.loadAdsSetting();
+    _loadAdsSetting();
+  }
+
+  Future<void> _loadAdsSetting() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      adsOn = prefs.getBool('adsOn') ?? true;
+    });
+  }
+
+  Future<void> _saveAdsSetting(bool value) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('adsOn', value);
   }
 
   @override
@@ -36,7 +48,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               setState(() {
                 adsOn = value;
               });
-              await AdsService.saveAdsSetting(value);
+              await _saveAdsSetting(value);
               if (value) {
                 AdsService.initializeBannerAd();
               } else {
