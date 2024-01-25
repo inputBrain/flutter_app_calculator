@@ -5,6 +5,8 @@ class AdsService {
   static late BannerAd _bannerAd;
   static bool isAdLoaded = false;
   static bool adsOn = true;
+  static BannerAd get getBanner => _bannerAd;
+
 
   static void initializeBannerAd() {
     _bannerAd = createBannerAd()
@@ -30,19 +32,20 @@ class AdsService {
     );
   }
 
-  static void disposeBannerAd() {
-    _bannerAd.dispose();
-  }
- 
-  static BannerAd get myBanner => _bannerAd;
-
   static void loadAdsSetting() async {
     final prefs = await SharedPreferences.getInstance();
     adsOn = prefs.getBool('adsOn') ?? true;
+    print('-----------------------------ADS VALUE:  $prefs');
+
   }
 
   static Future<void> saveAdsSetting(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('adsOn', value);
+  }
+
+
+  static void disposeBannerAd() {
+    _bannerAd.dispose();
   }
 }
