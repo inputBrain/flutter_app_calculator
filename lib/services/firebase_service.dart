@@ -38,7 +38,7 @@ class FirebaseAuthService {
     return await user.getIdToken();
   }
 
-  static Future<void> sendFirebaseTokenToServer(String firebaseToken) async {
+  static Future<UserModel?> sendFirebaseTokenToServer(String firebaseToken) async {
     const apiUrl = 'http://10.0.2.2:5500/api/Auth/AuthByFirebase';
 
     Future<UserModel?> sendPostAsync() async {
@@ -55,27 +55,38 @@ class FirebaseAuthService {
 
         if (response.statusCode == 200) {
           print('Firebase token sent successfully');
-          var userJson = jsonDecode(response.body);
-          return UserModel(
-            id: userJson['id'],
-            firstName: userJson['firstName'],
-            lastName: userJson['lastName'],
-            avatarUrl: userJson['avatarUrl'],
-            hasPremium: userJson['hasPremium'],
-          );
+          var responseData = jsonDecode(response.body);
+
+
+          if (responseData.containsKey("user") && responseData["user"] is Map<String, dynamic>) {
+            var userJson = responseData["user"];
+
+            var userModel = UserModel(
+              id: userJson['id'],
+              firstName: userJson['firstName'],
+              lastName: userJson['lastName'],
+              avatarUrl: userJson['avatarUrl'],
+              hasPremium: userJson['hasPremium'],
+            );
+            return userModel;
+          } else {
+            print('Error: Invalid JSON format or missing "user" data in response');
+            return null;
+          }
         } else {
           print('Error sending Firebase token to server. Status code: ${response.statusCode}');
           return null;
         }
+
       } catch (e) {
         print('Error sending Firebase token to server: $e');
         return null;
       }
-
     }
 
-    await sendPostAsync();
+    return await sendPostAsync();
   }
+
 
   static Stream<User?> authStateChanges() {
     return _auth.authStateChanges();
