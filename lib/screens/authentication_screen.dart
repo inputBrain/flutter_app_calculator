@@ -16,10 +16,10 @@ class AuthenticationScreen extends StatelessWidget {
 
             if (userCredential != null) {
               String? firebaseToken = await FirebaseAuthService.getFirebaseToken(userCredential.user!);
-              await FirebaseAuthService.sendFirebaseTokenToServer(firebaseToken!);
+              var decodedUserModel = await FirebaseAuthService.sendFirebaseTokenToServer(firebaseToken!);
 
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => const CalculatorScreen(),
+                builder: (context) => CalculatorScreen(userModel: decodedUserModel),
               ));
             }
           },

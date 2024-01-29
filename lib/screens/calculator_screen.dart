@@ -8,7 +8,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CalculatorScreen extends StatefulWidget {
-  const CalculatorScreen({Key? key}) : super(key: key);
+  final UserModel? userModel;
+  const CalculatorScreen({Key? key, required this.userModel}) : super(key: key);
 
   @override
   _CalculatorScreenState createState() => _CalculatorScreenState();
@@ -84,7 +85,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Calculator App'),
+        title: Text(widget.userModel?.hasPremium == true ? 'Premium Calculator App' : 'Not premium Calculator App'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.settings),
