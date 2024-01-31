@@ -35,7 +35,6 @@ class AdsService {
   static void loadAdsSetting() async {
     final prefs = await SharedPreferences.getInstance();
     adsOn = prefs.getBool('adsOn') ?? true;
-    print('-----------------------------ADS VALUE:  $prefs');
 
   }
 

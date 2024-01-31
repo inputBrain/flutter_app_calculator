@@ -31,11 +31,15 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
       adsOn = prefs.getBool('adsOn') ?? true;
+      if (widget.userModel?.hasPremium == true) {
+        adsOn = false;
+      }
       if (adsOn) {
         _initBannerAd();
       }
     });
   }
+
 
   void _initBannerAd() {
     myBanner = BannerAd(
@@ -91,7 +95,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
             icon: const Icon(Icons.settings),
             onPressed: () async {
               await Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const SettingsScreen(),
+                builder: (context) => SettingsScreen(userModel: widget.userModel),
               ));
               _loadAdsSetting();
             },
