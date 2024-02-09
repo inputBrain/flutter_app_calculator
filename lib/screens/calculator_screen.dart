@@ -1,11 +1,4 @@
-import 'package:calculator_app/models/UserModel.dart';
-import 'package:calculator_app/screens/settings_screen.dart';
-import 'package:calculator_app/services/ads_service.dart';
-import 'package:calculator_app/widgets/simple_calculator_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_simple_calculator/flutter_simple_calculator.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../imports.dart';
 
 class CalculatorScreen extends StatefulWidget {
   final UserModel? userModel;

@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:calculator_app/screens/calculator_screen.dart';
-import 'package:calculator_app/services/firebase_service.dart';
+import '../imports.dart';
 
 class AuthenticationScreen extends StatelessWidget {
   const AuthenticationScreen({super.key});
