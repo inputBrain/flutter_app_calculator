@@ -1,10 +1,4 @@
-import 'package:calculator_app/screens/authentication_screen.dart';
-import 'package:calculator_app/screens/calculator_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
+import 'imports.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +8,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await PurchasesConfiguration("goog_RQfrtfPfmLRrpvSfeDkOJszNJLZ");
 
   runApp(const MyApp());
 }
