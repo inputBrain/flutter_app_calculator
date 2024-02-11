@@ -1,7 +1,4 @@
-import 'package:calculator_app/models/UserModel.dart';
-import 'package:flutter/material.dart';
-import 'package:calculator_app/services/ads_service.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../imports.dart';
 
 class SettingsScreen extends StatefulWidget {
   final UserModel? userModel;
@@ -61,6 +58,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 AdsService.disposeBannerAd();
               }
             },
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await AdsService.buyPremium1Month();
+              if (success) {
+                // Успешная покупка, выполните необходимые действия
+              }
+            },
+            child: const Text('Buy premium for 1 month'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await AdsService.buyPremium3Months();
+              if (success) {
+                // Успешная покупка, выполните необходимые действия
+              }
+            },
+            child: const Text('Buy premium for 3 months'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              bool success = await AdsService.buyPremium12Months();
+              if (success) {
+                // Успешная покупка, выполните необходимые действия
+              }
+            },
+            child: const Text('Buy premium for 12 months'),
           ),
         ],
       ),

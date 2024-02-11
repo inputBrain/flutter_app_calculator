@@ -1,5 +1,4 @@
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../imports.dart';
 
 class AdsService {
   static late BannerAd _bannerAd;
@@ -46,5 +45,42 @@ class AdsService {
 
   static void disposeBannerAd() {
     _bannerAd.dispose();
+  }
+
+
+  //TODO:
+  static Future<bool> buyPremium1Month() async {
+    var firebaseUser = FirebaseAuthService.getCurrentUser();
+    var userId = firebaseUser?.uid;
+
+    try {
+      var purchaseDetails = await Purchases.purchasePackage("" as Package);
+      return purchaseDetails != null;
+    } catch (e) {
+      print("Error purchasing premium 1 month: $e");
+      return false;
+    }
+  }
+
+  //TODO:
+  static Future<bool> buyPremium3Months() async {
+    try {
+      var purchaseDetails = await Purchases.purchasePackage("pro_three_month:p3m" as Package);
+      return purchaseDetails != null;
+    } catch (e) {
+      print("Error purchasing premium 3 months: $e");
+      return false;
+    }
+  }
+
+  //TODO
+  static Future<bool> buyPremium12Months() async {
+    try {
+      var purchaseDetails = await Purchases.purchasePackage("pro_12_month:p12m" as Package);
+      return purchaseDetails != null;
+    } catch (e) {
+      print("Error purchasing premium 12 months: $e");
+      return false;
+    }
   }
 }
